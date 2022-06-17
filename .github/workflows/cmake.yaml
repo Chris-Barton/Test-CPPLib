@@ -9,12 +9,9 @@ on:
 
 jobs:
   build:
-
+  
     name: ${{ matrix.platform.job-name }}
-
-    env:
-      VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
-
+    
     strategy:
       fail-fast: false
       matrix:
@@ -23,15 +20,13 @@ jobs:
             job-name: Windows Build,
             runs-on: windows-latest,
             vcpkg-dir: "C:\\vcpkg",
-            cmake-preset: win-release,
-            mono: ""
+            cmake-preset: win-release
           },
           { 
             job-name: Linux Build,
             runs-on: ubuntu-latest,
             vcpkg-dir: "/usr/local/share/vcpkg",
-            cmake-preset: linux-release,
-            mono: mono
+            cmake-preset: linux-release
           }
         ]
 
@@ -46,18 +41,6 @@ jobs:
 
       - name: Get CMake and Ninja
         uses: lukka/get-cmake@v3.23.0
-
-      - name: 'Setup NuGet Credentials'
-        shell: 'bash'
-        # Replace <OWNER> with your organization name
-        run: >
-          ${{ matrix.platform.mono }} `${{ matrix.platform.vcpkg-dir }}/vcpkg fetch nuget | tail -n 1`
-          sources add
-          -source "https://nuget.pkg.github.com/Chris-Barton/index.json"
-          -storepasswordincleartext
-          -name "GitHub"
-          -username "Chris-Barton"
-          -password "${{ secrets.ACCESS_TOKEN }}"
 
       - name: Configure
         run: cmake --preset ${{ matrix.platform.cmake-preset }} -DCMAKE_TOOLCHAIN_FILE=${{ matrix.platform.vcpkg-dir }}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
