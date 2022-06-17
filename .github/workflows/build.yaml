@@ -10,6 +10,7 @@ jobs:
   build:
     name: ${{ matrix.platform.job-name }}
     strategy:
+      fail-fast: false
       matrix:
         platform: [
           { 
@@ -21,7 +22,7 @@ jobs:
           { 
             job-name: Linux Build,
             runs-on: ubuntu-latest,
-            vcpkg-dir: "${VCPKG_INSTALLATION_ROOT}",
+            vcpkg-dir: "$env:VCPKG_INSTALLATION_ROOT",
             cmake-preset: linux-release
           }
         ]
