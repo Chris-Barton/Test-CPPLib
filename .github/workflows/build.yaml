@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: matrix.platform.job-name
+    name: ${{ matrix.platform.job-name }}
     strategy:
       matrix:
         platform: [
