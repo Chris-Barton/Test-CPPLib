@@ -14,7 +14,7 @@ jobs:
         platform: [
           { 
             job-name: Windows Build,
-            runs-on: windows-latest,
+            runs-on: win-latest,
             vcpkg-dir: "%VCPKG_INSTALLATION_ROOT%",
             cmake-preset: windows-release
           },
