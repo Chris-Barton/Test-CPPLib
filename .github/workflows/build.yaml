@@ -13,8 +13,10 @@ jobs:
         include:
           - os: windows-latest
             vcpkg-dir: "%VCPKG_INSTALLATION_ROOT%"
+            cmake-preset: windows-release
           - os: ubuntu-latest            
             vcpkg-dir: ${VCPKG_INSTALLATION_ROOT}
+            cmake-preset: linux-release
 
     runs-on: ${{ matrix.os }}
 
@@ -26,12 +28,12 @@ jobs:
       uses: lukka/get-cmake@v3.23.0   
 
     - name: Configure
-      run: cmake --preset linux-release -DCMAKE_TOOLCHAIN_FILE=${{ matrix.vcpkg-dir }}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
+      run: cmake --preset ${{ matrix.cmake-preset }} -DCMAKE_TOOLCHAIN_FILE=${{ matrix.vcpkg-dir }}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
 
     - name: Build
-      run: cmake --build --preset linux-release ${{github.workspace}}
+      run: cmake --build --preset ${{ matrix.cmake-preset }} ${{github.workspace}}
 
     - name: Test
       working-directory: ${{github.workspace}}
-      run: ctest --preset linux-release
+      run: ctest --preset ${{ matrix.cmake-preset }}
       
