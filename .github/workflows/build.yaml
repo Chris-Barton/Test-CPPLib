@@ -10,10 +10,14 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: windows-latest
+            vcpkg-dir: "%VCPKG_INSTALLATION_ROOT%"
+          - os: ubuntu-latest            
+            vcpkg-dir: ${VCPKG_INSTALLATION_ROOT}
 
     runs-on: ${{ matrix.os }}
-    
+
     steps:      
     - name: Checkout
       uses: actions/checkout@v3
@@ -22,7 +26,7 @@ jobs:
       uses: lukka/get-cmake@v3.23.0   
 
     - name: Configure
-      run: cmake --preset linux-release -DCMAKE_TOOLCHAIN_FILE=${{env.VCPKG_INSTALLATION_ROOT}}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
+      run: cmake --preset linux-release -DCMAKE_TOOLCHAIN_FILE=${{ matrix.vcpkg-dir }}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
 
     - name: Build
       run: cmake --build --preset linux-release ${{github.workspace}}
