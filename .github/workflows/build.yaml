@@ -21,7 +21,7 @@ jobs:
       uses: lukka/get-cmake@v3.23.0   
 
     - name: Configure
-      run: cmake --preset linux-release -DCMAKE_TOOLCHAIN_FILE=${VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
+      run: cmake --preset linux-release -DCMAKE_TOOLCHAIN_FILE=${{env.VCPKG_INSTALLATION_ROOT}}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
 
     - name: Build
       run: cmake --build --preset linux-release ${{github.workspace}}
