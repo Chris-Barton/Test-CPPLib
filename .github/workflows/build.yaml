@@ -17,8 +17,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Setup Ninja
-      uses: seanmiddleditch/gha-setup-ninja@v3
+    - name: Get CMake and Ninja
+      uses: lukka/get-cmake@v3.23.0   
 
     - name: Configure
       run: cmake --preset linux-release -DCMAKE_TOOLCHAIN_FILE=${{env.VCPKG_INSTALLATION_ROOT}}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
