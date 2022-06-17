@@ -2,38 +2,45 @@ name: CMake
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
+    name: matrix.platform.job-name
     strategy:
       matrix:
-        include:
-          - os: windows-latest
-            vcpkg-dir: "%VCPKG_INSTALLATION_ROOT%"
+        platform: [
+          { 
+            job-name: Windows Build,
+            runs-on: windows-latest,
+            vcpkg-dir: "%VCPKG_INSTALLATION_ROOT%",
             cmake-preset: windows-release
-          - os: ubuntu-latest            
-            vcpkg-dir: ${VCPKG_INSTALLATION_ROOT}
+          },
+          { 
+            job-name: Linux Build,
+            runs-on: ubuntu-latest,
+            vcpkg-dir: "${VCPKG_INSTALLATION_ROOT}",
             cmake-preset: linux-release
+          }
+        ]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.platform.runs-on }}
 
-    steps:      
-    - name: Checkout
-      uses: actions/checkout@v3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Get CMake and Ninja
-      uses: lukka/get-cmake@v3.23.0   
+      - name: Get CMake and Ninja
+        uses: lukka/get-cmake@v3.23.0
 
-    - name: Configure
-      run: cmake --preset ${{ matrix.cmake-preset }} -DCMAKE_TOOLCHAIN_FILE=${{ matrix.vcpkg-dir }}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
+      - name: Configure
+        run: cmake --preset ${{ matrix.platform.cmake-preset }} -DCMAKE_TOOLCHAIN_FILE=${{ matrix.platform.vcpkg-dir }}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
 
-    - name: Build
-      run: cmake --build --preset ${{ matrix.cmake-preset }} ${{github.workspace}}
+      - name: Build
+        run: cmake --build --preset ${{ matrix.platform.cmake-preset }} ${{github.workspace}}
 
-    - name: Test
-      working-directory: ${{github.workspace}}
-      run: ctest --preset ${{ matrix.cmake-preset }}
-      
+      - name: Test
+        working-directory: ${{github.workspace}}
+        run: ctest --preset ${{ matrix.platform.cmake-preset  }}
