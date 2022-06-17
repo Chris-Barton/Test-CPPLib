@@ -6,6 +6,6 @@
 		"cxxopts",
 		"fmt",
 		"range-v3",
-		"catch2"
+		"gtest"
 	]
 }

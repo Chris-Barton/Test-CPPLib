@@ -1,0 +1,30 @@
+name: CMake
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  linux:
+
+    runs-on: ubuntu-latest
+
+    steps:      
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Get CMake and Ninja
+      uses: lukka/get-cmake@v3.23.0   
+
+    - name: Configure
+      run: cmake --preset linux-release -DCMAKE_TOOLCHAIN_FILE=${VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
+
+    - name: Build
+      run: cmake --build --preset linux-release ${{github.workspace}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}
+      run: ctest --preset linux-release
+      

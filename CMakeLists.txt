@@ -10,11 +10,11 @@ find_package(cxxopts REQUIRED)
 
 # _________________________ MAIN LIB TARGET_________________________
  
-file(GLOB_RECURSE SOURCES_CPP "cpp/*.cpp")
-file(GLOB_RECURSE SOURCES_H "headers/*.h")
+file(GLOB_RECURSE SOURCES_CPP "src/*.cpp")
+file(GLOB_RECURSE SOURCES_H "include/*.h")
 add_compile_definitions(TESTMATH_DLLEXPORT)
 add_library(Test-CPPLib SHARED ${SOURCES_H} ${SOURCES_CPP} )
-target_include_directories(Test-CPPLib PUBLIC "headers")
+target_include_directories(Test-CPPLib PUBLIC "include")
 set_property(TARGET Test-CPPLib PROPERTY CXX_STANDARD 20)
 
 target_link_libraries(Test-CPPLib 
@@ -23,14 +23,17 @@ target_link_libraries(Test-CPPLib
     range-v3::range-v3
     cxxopts::cxxopts)
 # _________________________ UNIT TESTS _________________________
+
 enable_testing()
-find_package(Catch2 REQUIRED)
-find_package(Catch2 REQUIRED)
-add_executable(UnitTests test.cpp)
 
-target_link_libraries(UnitTests PUBLIC Test-CPPLib Catch2::Catch2WithMain)
-target_include_directories(UnitTests PUBLIC "headers")
+find_package(GTest REQUIRED)
+include(GoogleTest)
+file(GLOB_RECURSE TEST_CPP "tests/src/*.cpp")
+file(GLOB_RECURSE TEST_H "tests/include/*.h")
 
-include(CTest)
-include(Catch)
-catch_discover_tests(UnitTests)
+add_executable(UnitTests ${TEST_H} ${TEST_CPP} )
+
+target_link_libraries(UnitTests PUBLIC Test-CPPLib GTest::GTest GTest::Main)
+target_include_directories(UnitTests PUBLIC "include")
+
+gtest_discover_tests(UnitTests)
