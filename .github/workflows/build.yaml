@@ -16,13 +16,13 @@ jobs:
           { 
             job-name: Windows Build,
             runs-on: windows-latest,
-            vcpkg-dir: "$env:VCPKG_INSTALLATION_ROOT",
+            vcpkg-dir: "C:\\vcpkg",
             cmake-preset: win-release
           },
           { 
             job-name: Linux Build,
             runs-on: ubuntu-latest,
-            vcpkg-dir: "${VCPKG_INSTALLATION_ROOT}",
+            vcpkg-dir: "/usr/local/share/vcpkg",
             cmake-preset: linux-release
           }
         ]
