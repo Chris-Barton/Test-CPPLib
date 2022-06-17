@@ -33,6 +33,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+
       - name: Get CMake and Ninja
         uses: lukka/get-cmake@v3.23.0
 
