@@ -86,12 +86,12 @@ jobs:
             {
               friendly-name: Linux,
               cmake-prefix: linux,
-              nuspec: ./scripts/linux.nuspec,
+              nuspec: scripts/linux.nuspec,
             },
             {
               friendly-name: Windows,
               cmake-prefix: win,
-              nuspec: ./scripts/windows.nuspec,
+              nuspec: scripts/windows.nuspec,
             },
           ]
 
