@@ -75,23 +75,28 @@ jobs:
           name: ${{ matrix.platform.cmake-preset  }}
           path: ${{ github.workspace }}/out/install/${{ matrix.platform.cmake-preset }}
 
-  package:
-    name: Package
+  package-win:
+    name: Package Windows
 
     runs-on: ubuntu-latest
     needs: build
+
+    permissions:
+      packages: write
+      actions: write
+
     steps:
+      - uses: actions/setup-dotnet@v2
+        with:
+          source-url: https://nuget.pkg.github.com/chris-barton/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
       - name: Get Windows Debug
         uses: actions/download-artifact@v3
         with:
           name: win-debug
           path: ${{ github.workspace }}/out/install/win-debug
-
-      - name: Get Linux Debug
-        uses: actions/download-artifact@v3
-        with:
-          name: linux-debug
-          path: ${{ github.workspace }}/out/install/linux-debug
 
       - name: Get Windows Release
         uses: actions/download-artifact@v3
@@ -99,11 +104,29 @@ jobs:
           name: win-release
           path: ${{ github.workspace }}/out/install/win-release
 
-      - name: Get Linux Release
-        uses: actions/download-artifact@v3
+      - name: Windows
+        uses: DamianReeves/write-file-action
         with:
-          name: linux-release
-          path: ${{ github.workspace }}/out/install/linux-release
+          path: ${{ github.workspace }}/windows.nuspec
+          contents: |
+            <?xml version="1.0" encoding="utf-8"?>
+            <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+                <metadata>
+                    <id>Test-CPPLib</id>
+                    <version>1.0.0</version>
+                    <summary>Test-CPPLib built using CMake</summary>
+                    <authors>HBK</authors>
+                    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+                    <description>NONE</description>
+                    <repository type="git" url="https://github.com/Chris-Barton/Test-CPPLib.git"/>
+                </metadata>
+                <files>
+                    <file src="out\install\win-release\**" target="\" />
+                    <file src="out\install\win-debug\**" target="debug\" />
+                </files>
+            </package>
+          write-mode: overwrite 
 
-      - name: LS
-        run: ls ${{github.workspace}}/out/install
+      - name: Nuget Pack 
+        working-directory: ${{github.workspace}}
+        run: mono nuget pack windows.nuspec
