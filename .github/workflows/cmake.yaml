@@ -43,18 +43,25 @@ jobs:
         uses: lukka/get-cmake@v3.23.0
 
       - name: Configure
-        run: cmake --preset ${{ matrix.platform.cmake-preset }} -DCMAKE_TOOLCHAIN_FILE=${{ matrix.platform.vcpkg-dir }}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
+        run: cmake --preset ${{ matrix.platform.cmake-preset }} -DCMAKE_TOOLCHAIN_FILE=${{ matrix.platform.vcpkg-dir }}/scripts/buildsystems/vcpkg.cmake ${{ github.workspace }}
 
       - name: Build
         run: cmake --build --preset ${{ matrix.platform.cmake-preset }} ${{github.workspace}}
 
       - name: Test
         working-directory: ${{github.workspace}}
-        run: ctest --preset ${{ matrix.platform.cmake-preset  }}
+        run: ctest --preset ${{ matrix.platform.cmake-preset }}
 
       - name: Install
         working-directory: ${{github.workspace}}
-        run: cmake --build --preset ${{ matrix.platform.cmake-preset  }} --target install 
+        run: cmake --build --preset ${{ matrix.platform.cmake-preset }} --target install 
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.platform.cmake-preset  }}
+          path: ${{ github.workspace }}/out/install/${{ matrix.platform.cmake-preset }}
+
   package:
     name: Package
 
