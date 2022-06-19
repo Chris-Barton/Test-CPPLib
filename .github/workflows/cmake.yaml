@@ -1,6 +1,7 @@
+---
 name: CMake
 env:
-  VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
+  VCPKG_BINARY_SOURCES: "clear;nuget,GitHub,readwrite"
 on:
   push:
     branches: ["main"]
@@ -9,38 +10,38 @@ on:
 
 jobs:
   build:
-  
     name: ${{ matrix.platform.job-name }}
-    
+
     strategy:
       fail-fast: false
       matrix:
-        platform: [
-          { 
-            job-name: Windows Build - Debug,
-            runs-on: windows-latest,
-            vcpkg-dir: "C:\\vcpkg",
-            cmake-preset: win-debug
-          },
-          { 
-            job-name: Linux Build - Debug,
-            runs-on: ubuntu-latest,
-            vcpkg-dir: "/usr/local/share/vcpkg",
-            cmake-preset: linux-debug
-          },
-          { 
-            job-name: Windows Build - Release,
-            runs-on: windows-latest,
-            vcpkg-dir: "C:\\vcpkg",
-            cmake-preset: win-release
-          },
-          { 
-            job-name: Linux Build - Release,
-            runs-on: ubuntu-latest,
-            vcpkg-dir: "/usr/local/share/vcpkg",
-            cmake-preset: linux-release
-          }
-        ]
+        platform:
+          [
+            {
+              job-name: Windows Build - Debug,
+              runs-on: windows-latest,
+              vcpkg-dir: "C:\\vcpkg",
+              cmake-preset: win-debug,
+            },
+            {
+              job-name: Linux Build - Debug,
+              runs-on: ubuntu-latest,
+              vcpkg-dir: "/usr/local/share/vcpkg",
+              cmake-preset: linux-debug,
+            },
+            {
+              job-name: Windows Build - Release,
+              runs-on: windows-latest,
+              vcpkg-dir: "C:\\vcpkg",
+              cmake-preset: win-release,
+            },
+            {
+              job-name: Linux Build - Release,
+              runs-on: ubuntu-latest,
+              vcpkg-dir: "/usr/local/share/vcpkg",
+              cmake-preset: linux-release,
+            },
+          ]
 
     runs-on: ${{ matrix.platform.runs-on }}
 
@@ -66,7 +67,7 @@ jobs:
 
       - name: Install
         working-directory: ${{github.workspace}}
-        run: cmake --build --preset ${{ matrix.platform.cmake-preset }} --target install 
+        run: cmake --build --preset ${{ matrix.platform.cmake-preset }} --target install
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
@@ -104,6 +105,5 @@ jobs:
           name: linux-release
           path: ${{ github.workspace }}/out/install/linux-release
 
-      - name: LS      
+      - name: LS
         run: ls ${{github.workspace}}/out/install
-
