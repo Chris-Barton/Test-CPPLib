@@ -17,6 +17,18 @@ jobs:
       matrix:
         platform: [
           { 
+            job-name: Windows Build - Debug,
+            runs-on: windows-latest,
+            vcpkg-dir: "C:\\vcpkg",
+            cmake-preset: win-debug
+          },
+          { 
+            job-name: Linux Build - Debug,
+            runs-on: ubuntu-latest,
+            vcpkg-dir: "/usr/local/share/vcpkg",
+            cmake-preset: linux-debug
+          },
+          { 
             job-name: Windows Build - Release,
             runs-on: windows-latest,
             vcpkg-dir: "C:\\vcpkg",
