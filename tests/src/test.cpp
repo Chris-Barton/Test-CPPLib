@@ -1,9 +1,10 @@
 #include <gtest/gtest.h>
 #include "TestMath.h"
-namespace {
+namespace
+{
 
     TEST(Fib, TEST1)
     {
-        ASSERT_TRUE(TestMath::fib(1) == 1);
+        ASSERT_EQ(TestMath::fib(1), 1);
     }
 }
