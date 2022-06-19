@@ -75,8 +75,25 @@ jobs:
           name: ${{ matrix.platform.cmake-preset  }}
           path: ${{ github.workspace }}/out/install/${{ matrix.platform.cmake-preset }}
 
-  package-win:
-    name: Package Windows
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+        [
+          {
+            friendly-name: Linux,
+            cmake-prefix: linux,
+            nuspec: .\scripts\linux.nuspec
+          },
+          {
+            friendly-name: Windows,
+            cmake-prefix: win,
+            nuspec: .\scripts\windows.nuspec
+          }
+        ]
+
+    name: Package ${{ matrix.platform.friendly-name }}
 
     runs-on: ubuntu-latest
     needs: build
@@ -86,57 +103,21 @@ jobs:
       actions: write
 
     steps:
-      - uses: actions/setup-dotnet@v2
-        with:
-          source-url: https://nuget.pkg.github.com/chris-barton/index.json
-        env:
-          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v1
 
-      - name: Get Windows Debug
+      - name: Get Debug
         uses: actions/download-artifact@v3
         with:
-          name: win-debug
-          path: ${{ github.workspace }}/out/install/win-debug
+          name: ${{ matrix.platform.cmake-prefix }}-debug
+          path: ${{ github.workspace }}/out/install/${{ matrix.platform.cmake-prefix }}-debug
 
-      - name: Get Windows Release
+      - name: Get Release
         uses: actions/download-artifact@v3
         with:
-          name: win-release
-          path: ${{ github.workspace }}/out/install/win-release
+          name: ${{ matrix.platform.cmake-prefix }}-release
+          path: ${{ github.workspace }}/out/install/${{ matrix.platform.cmake-prefix }}-release
 
       - name: Nuget Pack 
         working-directory: ${{github.workspace}}
-        run: mono nuget pack .\scripts\windows.nuspec
-
-  package-lin:
-    name: Package Linux
-
-    runs-on: ubuntu-latest
-    needs: build
-
-    permissions:
-      packages: write
-      actions: write
-
-    steps:
-      - uses: actions/setup-dotnet@v2
-        with:
-          source-url: https://nuget.pkg.github.com/chris-barton/index.json
-        env:
-          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-      - name: Get Linux Debug
-        uses: actions/download-artifact@v3
-        with:
-          name: win-debug
-          path: ${{ github.workspace }}/out/install/linux-debug
-
-      - name: Get Linux Release
-        uses: actions/download-artifact@v3
-        with:
-          name: win-release
-          path: ${{ github.workspace }}/out/install/linux-release
-
-      - name: Nuget Pack 
-        working-directory: ${{github.workspace}}
-        run: mono nuget pack .\scripts\linux.nuspec
+        run: nuget pack ${{ matrix.platform.nuspec }}
