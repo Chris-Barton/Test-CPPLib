@@ -41,14 +41,16 @@ gtest_discover_tests(UnitTests)
 
 
 # _________________________ Packaging _________________________
-
+install(DIRECTORY include/ DESTINATION include)
+install(TARGETS Test-CPPLib ARCHIVE DESTINATION)
 if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
   set(ARCH_POSTFIX "win64")
   message("ARCH: WIN64")
+  install(FILES $<TARGET_PDB_FILE:${PROJECT_NAME}> DESTINATION bin OPTIONAL)
 elseif (CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
   set(ARCH_POSTFIX "lin64")
   message("ARCH: LIN64")
 endif()
 
-install(DIRECTORY include/ DESTINATION include)
-install(TARGETS Test-CPPLib ARCHIVE DESTINATION)
+
+
