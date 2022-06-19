@@ -13,6 +13,7 @@ on:
     branches: [ "main" ]
 jobs:
   run-lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
