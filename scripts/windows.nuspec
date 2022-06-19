@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>Test-CPPLib-Win64</id>
+        <version>1.0.0</version>
+        <summary>Test-CPPLib</summary>
+        <authors>HBK</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>NONE</description>
+        <repository type="git" url="https://github.com/Chris-Barton/Test-CPPLib.git"/>
+    </metadata>
+    <files>
+        <file src="..\out\install\win-release\**" target="\" />
+        <file src="..\out\install\win-debug\**" target="debug\" />
+    </files>
+</package>
