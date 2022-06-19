@@ -90,7 +90,7 @@ jobs:
             friendly-name: Windows,
             cmake-prefix: win,
             nuspec: .\scripts\windows.nuspec
-          }
+          },
         ]
 
     name: Package ${{ matrix.platform.friendly-name }}
