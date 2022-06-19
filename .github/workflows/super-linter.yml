@@ -24,3 +24,4 @@ jobs:
           DEFAULT_BRANCH: "main"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           YAML_ERROR_ON_WARNING: true
+          VALIDATE_CLANG_FORMAT: false

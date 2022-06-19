@@ -8,7 +8,8 @@ int TestMath::fib(int x)
 {
     int a = 0, b = 1;
 
-    for (int it : view::repeat(0) | view::take(x)) {
+    for (int it : view::repeat(0) | view::take(x))
+    {
         (void)it;
         int tmp = a;
         a += b;
