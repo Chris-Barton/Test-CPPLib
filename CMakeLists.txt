@@ -1,15 +1,16 @@
 ﻿# CMakeList.txt : CMake project for Test-CPPLib, include source and define
 # project specific logic here.
 #
-cmake_minimum_required (VERSION 3.19)
+cmake_minimum_required (VERSION 3.20)
 
 project ("Test-CPPLib")
 find_package(fmt REQUIRED)
 find_package(range-v3 REQUIRED)
 find_package(cxxopts REQUIRED)
 
+set(CMAKE_DEBUG_POSTFIX d)
+
 # _________________________ MAIN LIB TARGET_________________________
- 
 file(GLOB_RECURSE SOURCES_CPP "src/*.cpp")
 file(GLOB_RECURSE SOURCES_H "include/*.h")
 add_compile_definitions(TESTMATH_DLLEXPORT)
@@ -37,3 +38,17 @@ target_link_libraries(UnitTests PUBLIC Test-CPPLib GTest::GTest GTest::Main)
 target_include_directories(UnitTests PUBLIC "include")
 
 gtest_discover_tests(UnitTests)
+
+
+# _________________________ Packaging _________________________
+
+if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+  set(ARCH_POSTFIX "win64")
+  message("ARCH: WIN64")
+elseif (CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+  set(ARCH_POSTFIX "lin64")
+  message("ARCH: LIN64")
+endif()
+
+install(DIRECTORY include/ DESTINATION include)
+install(TARGETS Test-CPPLib ARCHIVE DESTINATION)
