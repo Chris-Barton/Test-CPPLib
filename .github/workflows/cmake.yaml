@@ -105,7 +105,7 @@ jobs:
     steps:
       - name: Setup NuGet
         uses: nuget/setup-nuget@v1
-        
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -123,3 +123,6 @@ jobs:
 
       - name: Nuget Pack
         run: nuget pack ${{ matrix.platform.nuspec }}
+
+      - name: Nuget Push
+        run: nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/chris-barton/index.json
