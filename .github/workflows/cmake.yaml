@@ -105,6 +105,9 @@ jobs:
     steps:
       - name: Setup NuGet
         uses: nuget/setup-nuget@v1
+        
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Get Debug
         uses: actions/download-artifact@v3
@@ -119,5 +122,4 @@ jobs:
           path: ${{ github.workspace }}/out/install/${{ matrix.platform.cmake-prefix }}-release
 
       - name: Nuget Pack
-        working-directory: ${{github.workspace}}
         run: nuget pack ${{ matrix.platform.nuspec }}
